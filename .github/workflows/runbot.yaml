@@ -1,7 +1,7 @@
 name: Run Twitter bot
 on:
   schedule:
-    - cron: "*/5 * * * *"
+    - cron: "*/10 * * * *"
 jobs:
   run-bot:
     runs-on: ubuntu-latest

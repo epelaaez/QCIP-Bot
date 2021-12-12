@@ -9,10 +9,6 @@ api = twitter.Api(consumer_key=os.environ["CONSUMER_KEY"],
                   access_token_key=os.environ["ACCESS_TOKEN"],
                   access_token_secret=os.environ["ACCESS_SECRET"])
 
-# Get last Tweet by bot
-statuses   = api.GetUserTimeline(screen_name="quantcompinf")
-last_tweet = statuses[0].text
-
 # Query the arXiv API
 arxiv_query = "http://export.arxiv.org/api/query?search_query=cat:quant-ph+AND+%28"
 terms       = ["gates", "computation", "information", "qubit", "bit"]
@@ -30,6 +26,7 @@ link  = data.link
 summ  = data.summary
 auth  = ', '.join(author.name for author in data.authors)
 tweet = " ".join(f"\"{title}\" by {auth}. Summary: {summ} {link}.".split())
+tweet = ''.join(c for c in tweet if c not in set("\$"))
 
 if len(tweet) > 280:
     # Divide into multiple Tweets for thread
@@ -46,18 +43,16 @@ if len(tweet) > 280:
     for i in range(len(tweets)):
         tweets[i] = tweets[i] + f" [{i+1}/{len(tweets)}]"
 
-    # Check that paper hasn't been tweeted already
-    if tweets[-1] == last_tweet:
-        quit()
-
     # Publish thread
-    id = api.PostUpdate(tweets[0]).id_str
-    for tweet in tweets[1:]:
-        id = api.PostUpdate(tweet, in_reply_to_status_id=id).id_str
+    try:
+        id = api.PostUpdate(tweets[0]).id_str
+        for tweet in tweets[1:]:
+            id = api.PostUpdate(tweet, in_reply_to_status_id=id).id_str
+    except twitter.error.TwitterError as err:
+        print(err)
 else:
-    # Check that paper hasn't been tweeted already
-    if tweet == last_tweet:
-        quit()
-
     # Publish Tweet
-    api.PostUpdate(tweet)
+    try:
+        api.PostUpdate(tweet)
+    except twitter.error.TwitterError as err:
+        print(err)

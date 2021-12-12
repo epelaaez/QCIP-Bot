@@ -1,22 +1,20 @@
 name: Run Twitter bot
-
 on:
   schedule:
-    - cron: "*/15 * * * *"
-
+    - cron: "*/10 * * * *"
 jobs:
   run-bot:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout repo content
+      - name: Checkout repo content
         uses: actions/checkout@v2 
-      - name: setup python
+      - name: Setup python
         uses: actions/setup-python@v2
         with:
           python-version: 3.9.6 
-      - name: install dependencies
+      - name: Install dependencies
         run: pip install -r requirements.txt
-      - name: run bot
+      - name: Run bot
         run: python bot.py
         env:
           CONSUMER_KEY: ${{ secrets.CONSUMER_KEY }}

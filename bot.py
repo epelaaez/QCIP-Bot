@@ -75,7 +75,7 @@ if len(tweet) > 280:
         tweets[i] = tweets[i] + f" [{i+1}/{len(tweets)}]"
 
     # Check for repetition
-    if tweets[-1] == last_tweet:
+    if " ".join(tweets[-1].split()) == last_tweet:
         print(f"Repeated tweet: {last_tweet}")
         exit()
 
@@ -88,7 +88,7 @@ if len(tweet) > 280:
         print(err)
 else:
     # Check for repetition
-    if tweet == last_tweet:
+    if " ".join(tweet.split()) == last_tweet:
         print(f"Repeated tweet: {last_tweet}")
         exit()
 

@@ -10,15 +10,13 @@ api = twitter.Api(consumer_key=os.environ["CONSUMER_KEY"],
                   access_token_secret=os.environ["ACCESS_SECRET"])
 
 # Get last Tweets
-timeline      = api.GetUserTimeline(user_id=1469787460620193793, screen_name="quantcompinf", count=150)
+timeline      = api.GetUserTimeline(user_id=1469787460620193793, screen_name="quantcompinf", count=200)
 timeline_text = [" ".join(t.text.split()) for t in timeline]
 
 # Query the arXiv API
 arxiv_query = "http://export.arxiv.org/api/query?search_query=cat:quant-ph+AND+%28"
 terms       = [
                 "gates",
-                "compute",
-                "computation",
                 "information",
                 "qubit",
                 "bit",
@@ -53,7 +51,7 @@ for data in feedparser.parse(publications)['entries']:
     # Check paper hasn't been shared already
     repeat_flag = False
     for t in timeline_text:
-        if title in t:
+        if title[:80] in t:
             repeat_flag = True
             print("Repeated: ", title)
             break

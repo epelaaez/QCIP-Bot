@@ -10,8 +10,9 @@ api = twitter.Api(consumer_key=os.environ["CONSUMER_KEY"],
                   access_token_secret=os.environ["ACCESS_SECRET"])
 
 # Get last Tweet
-timeline = api.GetUserTimeline(user_id=1469787460620193793, screen_name="quantcompinf", count=1)
-if len(timeline) < 0:
+timeline   = api.GetUserTimeline(user_id=1469787460620193793, screen_name="quantcompinf", count=1)
+last_tweet = None
+if len(timeline) > 0:
     last_tweet = timeline[0].text
 
 # Query the arXiv API

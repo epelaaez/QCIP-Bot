@@ -11,7 +11,7 @@ api = twitter.Api(consumer_key=os.environ["CONSUMER_KEY"],
 
 # Query the arXiv API
 arxiv_query = "http://export.arxiv.org/api/query?search_query=cat:quant-ph+AND+%28"
-terms       = ["gates", "compute", "computation", "information", "qubit", "bit", "algorithm", "%22error+correct%22", "cryptography", "encryption", "data", "nisq", "transpilation", "processor", "communication", "anneal", "code", "circuit", "%22machine+learning%22", "%neural+network%22", "oracle"]
+terms       = ["gates", "compute", "computation", "information", "qubit", "bit", "algorithm", "%22error+correct%22", "cryptography", "encryption", "data", "nisq", "transpilation", "processor", "communication", "anneal", "code", "circuit", "%22machine+learning%22", "%22neural+network%22", "oracle"]
 for term in terms:
     arxiv_query += f"abs:{term}+OR+"
 arxiv_query  = arxiv_query[:-4]

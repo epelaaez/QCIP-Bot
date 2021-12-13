@@ -50,8 +50,8 @@ if len(data.authors) < 6:
     auth = ", ".join(author.name for author in data.authors)
 else:
     auth  = ", ".join(data.authors[i].name for i in range(5))
-    auth += "et al"
-tweet = f"{link}\n\"{title}\" by {auth}.\nSummary: {summ}" 
+    auth += " et al"
+tweet = f"{link}\n\n\"{title}\" by {auth}.\n\nSummary: {summ}" 
 
 if len(tweet) > 280:
     # Divide into multiple Tweets for thread

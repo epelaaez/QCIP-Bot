@@ -68,9 +68,13 @@ for data in feedparser.parse(publications)['entries']:
     # Retrieve missing data and concatenate it
     summ        = " ".join(data.summary.split()).replace("$", "")
     link        = data.link
-    first_tweet = f"{link}\n\n\"{title}\" by {auth}." 
+    first_tweet = f"{link}\n\n\"{title}\" by {auth}."        
     tweet       = f"Summary: {summ}"
-    tweets      = [first_tweet]
+    if len(first_tweet) <= 280:
+        tweets = [first_tweet]
+    else:
+        tweet  = first_tweet + "\n\n" + tweet
+        tweets = []
 
     if len(tweet) > 280:
         # Divide into multiple Tweets for thread

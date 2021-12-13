@@ -9,6 +9,11 @@ api = twitter.Api(consumer_key=os.environ["CONSUMER_KEY"],
                   access_token_key=os.environ["ACCESS_TOKEN"],
                   access_token_secret=os.environ["ACCESS_SECRET"])
 
+# Get last Tweet
+timeline = api.GetUserTimeline(user_id=1469787460620193793, screen_name="quantcompinf", count=1)
+if len(timeline) < 0:
+    last_tweet = timeline[0].text
+
 # Query the arXiv API
 arxiv_query = "http://export.arxiv.org/api/query?search_query=cat:quant-ph+AND+%28"
 terms       = [
@@ -68,6 +73,11 @@ if len(tweet) > 280:
     for i in range(len(tweets)):
         tweets[i] = tweets[i] + f" [{i+1}/{len(tweets)}]"
 
+    # Check for repetition
+    if tweets[-1] == last_tweet:
+        print(f"Repeated tweet: {last_tweet}")
+        exit()
+
     # Publish thread
     try:
         id = api.PostUpdate(tweets[0]).id_str
@@ -76,6 +86,11 @@ if len(tweet) > 280:
     except twitter.error.TwitterError as err:
         print(err)
 else:
+    # Check for repetition
+    if tweet == last_tweet:
+        print(f"Repeated tweet: {last_tweet}")
+        exit()
+
     # Publish Tweet
     try:
         api.PostUpdate(tweet)

@@ -11,7 +11,29 @@ api = twitter.Api(consumer_key=os.environ["CONSUMER_KEY"],
 
 # Query the arXiv API
 arxiv_query = "http://export.arxiv.org/api/query?search_query=cat:quant-ph+AND+%28"
-terms       = ["gates", "compute", "computation", "information", "qubit", "bit", "algorithm", "%22error+correct%22", "cryptography", "encryption", "data", "nisq", "transpilation", "processor", "communication", "anneal", "code", "circuit", "%22machine+learning%22", "%22neural+network%22", "oracle"]
+terms       = [
+                "gates",
+                "compute",
+                "computation", 
+                "information", 
+                "qubit", 
+                "bit", 
+                "algorithm", 
+                "%22error+correct%22", 
+                "cryptography", 
+                "encryption", 
+                "data", 
+                "nisq", 
+                "transpilation", 
+                "processor", 
+                "communication", 
+                "anneal", 
+                "code", 
+                "circuit", 
+                "%22machine+learning%22", 
+                "%22neural+network%22", 
+                "oracle"
+            ]
 for term in terms:
     arxiv_query += f"abs:{term}+OR+"
 arxiv_query  = arxiv_query[:-4]
@@ -21,12 +43,15 @@ arxiv_query += "%29&sortBy=lastUpdatedDate&sortOrder=descending&max_results=1"
 with libreq.urlopen(arxiv_query) as url:
     publications = url.read()
 data  = feedparser.parse(publications)['entries'][0]
-title = data.title
+title = " ".join(data.title.split())
+summ  = " ".join(data.summary.split())
 link  = data.link
-summ  = data.summary
-auth  = ', '.join(author.name for author in data.authors)
-tweet = " ".join(f"\"{title}\" by {auth}. Summary: {summ} {link}.".split())
-tweet = ''.join(c for c in tweet if c not in set("\$"))
+if len(data.authors) < 6:
+    auth = ", ".join(author.name for author in data.authors)
+else:
+    auth  = ", ".join(data.authors[i].name for i in range(5))
+    auth += "et al"
+tweet = f"{link}\n\"{title}\" by {auth}.\nSummary: {summ}" 
 
 if len(tweet) > 280:
     # Divide into multiple Tweets for thread

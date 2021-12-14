@@ -20,6 +20,7 @@ terms       = [
                 "information",
                 "qubit",
                 "bit",
+                "stabilizer",
                 "algorithm",
                 "cryptography",
                 "encryption",
@@ -31,15 +32,17 @@ terms       = [
                 "code",
                 "oracle",
                 "circuit",
+                "tomography",
                 "%22error+correct%22",
                 "%22state+preparation%22",
                 "%22machine+learning%22",
                 "%22neural+network%22",
+                "%22bloch+sphere%22"
             ]
 for term in terms:
     arxiv_query += f"abs:{term}+OR+"
 arxiv_query  = arxiv_query[:-4]
-arxiv_query += "%29&sortBy=lastUpdatedDate&sortOrder=descending&max_results=5"
+arxiv_query += "%29&sortBy=submittedDate&sortOrder=descending&max_results=10"
 
 # Fetch data and concatenate
 with libreq.urlopen(arxiv_query) as url:

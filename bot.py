@@ -1,4 +1,5 @@
 import twitter
+import time
 import feedparser
 import os
 import urllib.request as libreq
@@ -96,9 +97,30 @@ for data in feedparser.parse(publications)['entries']:
         tweets.append(tweet)
 
     # Publish thread
+    ids = []
     try:
         id = api.PostUpdate(tweets[0]).id_str
+        ids.append(id)
+        time.sleep(0.5)
         for tweet in tweets[1:]:
             id = api.PostUpdate(tweet, in_reply_to_status_id=id).id_str
+            ids.append(id)
+            time.sleep(0.5)
     except twitter.error.TwitterError as err:
         print(err)
+    
+    # Check thread was correctly published
+    if len(ids) != len(tweets):
+        for id in ids:
+            api.DestroyStatus(status_id=id)
+    else:
+        # Check tweets are in reply to each other
+        first = api.GetStatus(status_id=ids[0])
+        for id in ids[1:]:
+            second = api.GetStatus(states_id=id)
+            if second.in_reply_to_status_id_str != first:
+                for id in ids:
+                    api.DestroyStatus(status_id=id)
+                break
+            else:
+                first = second

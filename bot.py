@@ -83,7 +83,7 @@ for data in feedparser.parse(publications)['entries']:
     if len(tweet) > 280:
         # Divide into multiple Tweets for thread
         while len(tweet) > 280:
-            for i in range(273, -1, -1):
+            for i in range(270, -1, -1):
                 if tweet[i] == " ":
                     tweets.append(tweet[:i])
                     tweet = tweet[i:]

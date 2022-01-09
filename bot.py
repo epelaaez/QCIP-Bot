@@ -117,7 +117,7 @@ for data in feedparser.parse(publications)['entries']:
         # Check tweets are in reply to each other
         first = api.GetStatus(status_id=ids[0])
         for id in ids[1:]:
-            second = api.GetStatus(states_id=id)
+            second = api.GetStatus(status_id=id)
             if second.in_reply_to_status_id_str != first:
                 for id in ids:
                     api.DestroyStatus(status_id=id)

@@ -118,7 +118,7 @@ for data in feedparser.parse(publications)['entries']:
         first = api.GetStatus(status_id=ids[0])
         for id in ids[1:]:
             second = api.GetStatus(status_id=id)
-            if second.in_reply_to_status_id_str != first:
+            if str(second.in_reply_to_status_id) != first:
                 for id in ids:
                     api.DestroyStatus(status_id=id)
                 break

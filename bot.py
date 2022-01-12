@@ -74,15 +74,15 @@ for data in feedparser.parse(publications)['entries']:
     link        = data.link
     first_tweet = f"{link}\n\n\"{title}\" by {auth}."        
     tweet       = f"Summary: {summ}"
-    if len(first_tweet) <= 280:
+    if len(first_tweet) <= 275:
         tweets = [first_tweet]
     else:
         tweet  = first_tweet + "\n\n" + tweet
         tweets = []
 
-    if len(tweet) > 280:
+    if len(tweet) > 275:
         # Divide into multiple Tweets for thread
-        while len(tweet) > 280:
+        while len(tweet) > 275:
             for i in range(270, -1, -1):
                 if tweet[i] == " ":
                     tweets.append(tweet[:i])
@@ -97,30 +97,11 @@ for data in feedparser.parse(publications)['entries']:
         tweets.append(tweet)
 
     # Publish thread
-    ids = []
     try:
         id = api.PostUpdate(tweets[0]).id_str
-        ids.append(id)
         time.sleep(0.5)
         for tweet in tweets[1:]:
             id = api.PostUpdate(tweet, in_reply_to_status_id=id).id_str
-            ids.append(id)
             time.sleep(0.5)
     except twitter.error.TwitterError as err:
         print(err)
-    
-    # Check thread was correctly published
-    if len(ids) != len(tweets):
-        for id in ids:
-            api.DestroyStatus(status_id=id)
-    else:
-        # Check tweets are in reply to each other
-        first = api.GetStatus(status_id=ids[0])
-        for id in ids[1:]:
-            second = api.GetStatus(status_id=id)
-            if second.in_reply_to_status_id_str != first:
-                for id in ids:
-                    api.DestroyStatus(status_id=id)
-                break
-            else:
-                first = second

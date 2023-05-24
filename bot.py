@@ -8,10 +8,11 @@ import urllib.request as libreq
 api = twitter.Api(consumer_key=os.environ["CONSUMER_KEY"],
                   consumer_secret=os.environ["CONSUMER_SECRET"],
                   access_token_key=os.environ["ACCESS_TOKEN"],
-                  access_token_secret=os.environ["ACCESS_SECRET"])
+                  access_token_secret=os.environ["ACCESS_SECRET"],
+                  sleep_on_rate_limit=True)
 
 # Get last Tweets
-timeline      = api.GetUserTimeline(user_id=1469787460620193793, screen_name="quantcompinf", count=200)
+timeline      = api.GetUserTimeline(user_id=1469787460620193793, screen_name="quantcompinf", count=100)
 timeline_text = [" ".join(t.text.split()) for t in timeline]
 
 # Query the arXiv API
